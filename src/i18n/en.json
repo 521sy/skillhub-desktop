@@ -39,7 +39,8 @@
       "codex": "OpenAI Codex CLI for code generation",
       "opencode": "Open-source AI coding assistant",
       "geminiCli": "Google Gemini CLI for AI tasks",
-      "windsurf": "Codeium AI-powered IDE"
+      "windsurf": "Codeium AI-powered IDE",
+      "openclaw": "Open-source AI agent platform with 10,700+ skills"
     }
   },
   "explorer": {

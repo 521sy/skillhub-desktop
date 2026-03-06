@@ -39,7 +39,8 @@
       "codex": "OpenAI Codex CLI 代码生成工具",
       "opencode": "开源 AI 编程助手",
       "geminiCli": "Google Gemini CLI AI 工具",
-      "windsurf": "Codeium AI 驱动 IDE"
+      "windsurf": "Codeium AI 驱动 IDE",
+      "openclaw": "开源 AI 代理平台，拥有 10,700+ 技能"
     }
   },
   "explorer": {
