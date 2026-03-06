@@ -27,6 +27,7 @@ const TOOL_ICONS: Record<string, string> = {
   'zed': 'https://zed.dev/favicon.ico',
   'vscode': 'https://code.visualstudio.com/favicon.ico',
   'trae': 'https://traeide.com/favicon.ico',
+  'openclaw': 'https://openclaw.ai/favicon.ico',
 }
 
 // Fallback colors for tools without icons
@@ -49,6 +50,7 @@ const TOOL_COLORS: Record<string, string> = {
   'zed': '#000000',
   'vscode': '#007ACC',
   'trae': '#7C3AED',
+  'openclaw': '#FF6B35',
 }
 
 // Short names for fallback display
@@ -71,6 +73,7 @@ const TOOL_SHORT_NAMES: Record<string, string> = {
   'zed': 'ZD',
   'vscode': 'VS',
   'trae': 'TR',
+  'openclaw': '🦞',
 }
 
 export default function ToolIcon({ toolId, size = 24, className = '' }: ToolIconProps) {

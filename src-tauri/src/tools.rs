@@ -182,6 +182,15 @@ const SUPPORTED_TOOLS: &[ToolConfig] = &[
         primary_subpath: "skills",
         all_subpaths: &["skills"],
     },
+    // OpenClaw: ~/.openclaw/workspace/
+    // Workspace skills stored in skill.md format with YAML frontmatter
+    ToolConfig {
+        id: "openclaw",
+        name: "OpenClaw",
+        config_paths: &[".openclaw"],
+        primary_subpath: "workspace",
+        all_subpaths: &["workspace"],
+    },
     // Note: VS Code uses GitHub Copilot for skills, so no separate vscode entry needed
 ];
 
