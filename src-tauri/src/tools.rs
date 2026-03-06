@@ -311,8 +311,8 @@ async fn count_skills_in_dir(dir: &PathBuf) -> usize {
             }
             
             if path.is_dir() {
-                // Check if it has SKILL.md
-                if path.join("SKILL.md").exists() {
+                // Check if it has SKILL.md or skill.md (OpenClaw uses lowercase)
+                if path.join("SKILL.md").exists() || path.join("skill.md").exists() {
                     count += 1;
                 }
             } else if path.extension().map(|e| e == "md").unwrap_or(false) {
@@ -372,8 +372,19 @@ async fn collect_skills_from_dir(skills_dir: &PathBuf, tool_id: &str, skills: &m
 
             if path.is_dir() {
                 let skill_md = path.join("SKILL.md");
-                if skill_md.exists() {
-                    if let Ok(content) = fs::read_to_string(&skill_md).await {
+                let skill_md_lower = path.join("skill.md");
+
+                // Try SKILL.md first, then skill.md (OpenClaw uses lowercase)
+                let skill_file = if skill_md.exists() {
+                    Some(skill_md)
+                } else if skill_md_lower.exists() {
+                    Some(skill_md_lower)
+                } else {
+                    None
+                };
+
+                if let Some(skill_file) = skill_file {
+                    if let Ok(content) = fs::read_to_string(&skill_file).await {
                         let (name, description, author) = parse_skill_md(&content);
                         skills.push(InstalledSkill {
                             name: name.unwrap_or_else(|| {
@@ -480,7 +491,13 @@ pub async fn install_skill_to_tools(
             .await
             .map_err(|e| format!("Failed to create skill directory: {}", e))?;
 
-        let skill_file = skill_dir.join("SKILL.md");
+        // OpenClaw uses lowercase skill.md, others use SKILL.md
+        let skill_filename = if tool_id == "openclaw" {
+            "skill.md"
+        } else {
+            "SKILL.md"
+        };
+        let skill_file = skill_dir.join(skill_filename);
         fs::write(&skill_file, skill_content)
             .await
             .map_err(|e| format!("Failed to write skill file: {}", e))?;
@@ -687,14 +704,20 @@ pub async fn read_skill_content(skill_path: &str) -> Result<String, String> {
     let path = PathBuf::from(skill_path);
 
     if path.is_dir() {
-        // Read SKILL.md from directory
+        // Read SKILL.md or skill.md from directory (OpenClaw uses lowercase)
         let skill_file = path.join("SKILL.md");
+        let skill_file_lower = path.join("skill.md");
+
         if skill_file.exists() {
             fs::read_to_string(&skill_file)
                 .await
                 .map_err(|e| format!("Failed to read skill file: {}", e))
+        } else if skill_file_lower.exists() {
+            fs::read_to_string(&skill_file_lower)
+                .await
+                .map_err(|e| format!("Failed to read skill file: {}", e))
         } else {
-            Err("SKILL.md not found in directory".to_string())
+            Err("SKILL.md or skill.md not found in directory".to_string())
         }
     } else if path.is_file() {
         fs::read_to_string(&path)

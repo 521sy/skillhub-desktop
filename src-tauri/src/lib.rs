@@ -1,4 +1,5 @@
 mod installer;
+mod openclaw;
 mod sync;
 mod tools;
 
