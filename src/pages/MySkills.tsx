@@ -30,6 +30,7 @@ import type { UserSkill, SyncFile, SyncMeta, VersionEntry, CompareResult } from 
 import SyncStatusBadge, { type SyncStatus } from '../components/SyncStatusBadge'
 import VersionHistory from '../components/VersionHistory'
 import DiffViewer from '../components/DiffViewer'
+import ToolIcon from '../components/ToolIcon'
 
 const SKILLHUB_URL = import.meta.env.VITE_SKILLHUB_API_URL || 'https://www.skillhub.club'
 
@@ -158,13 +159,16 @@ export default function MySkills() {
   }
 
   // Pull a skill to local directory
-  const handlePull = async (skill: UserSkill) => {
+  const handlePull = async (skill: UserSkill, targetToolId?: string) => {
     setActionBusy(skill.id, 'pull')
     try {
       const data = await pullSkill(skill.id)
 
-      // Determine save path - use first detected tool's skills path
-      const targetTool = tools.find(t => t.skills_path)
+      // Determine save path - use specified tool or first detected tool
+      const targetTool = targetToolId
+        ? tools.find(t => t.id === targetToolId && t.skills_path)
+        : tools.find(t => t.skills_path)
+
       if (!targetTool) {
         showToast(t('mySkills.noToolsForPull'), 'error')
         return
@@ -417,6 +421,18 @@ export default function MySkills() {
                   <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
                     <span>{skill.category}</span>
                     <span>{t('mySkills.updated', { date: formatDate(skill.updatedAt) })}</span>
+                    {state?.syncMeta && state.localPath && (() => {
+                      const toolId = tools.find(t => state.localPath?.includes(t.config_path))?.id
+                      if (toolId) {
+                        return (
+                          <span className="flex items-center gap-1 text-foreground">
+                            <ToolIcon toolId={toolId} size={12} />
+                            {tools.find(t => t.id === toolId)?.name}
+                          </span>
+                        )
+                      }
+                      return null
+                    })()}
                     {state?.localPath && (
                       <button
                         onClick={() => handleOpenFolder(skill.id)}

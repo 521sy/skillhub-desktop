@@ -15,6 +15,7 @@ const TOOL_CONFIGS: Record<string, ToolConfig> = {
   windsurf: { configFolder: '.windsurf', primarySubdir: 'rules' },
   roocode: { configFolder: '.roo', primarySubdir: 'skills' },
   zed: { configFolder: '.zed', primarySubdir: 'rules' },
+  openclaw: { configFolder: '.openclaw', primarySubdir: 'workspace' },
 }
 
 export function getToolConfigFolder(toolId: string, fallbackConfigPath?: string): string {
